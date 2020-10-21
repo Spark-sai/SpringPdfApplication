@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Insert title here</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container"> <!--container Begin-->
+        <div class="card"> <!--Card begin-->
+            <div class="card-header bg-primary text-white text-center ">
+                <h3>Shipment</h3>
+            </div>
+            <div class="card-body">
+                <form id="shipForm" th:action="@{/Shipment/save}" method="post"  th:object="${ship}">
+                    <div class="row"> <!--row Begin-->
+                        <div class="col-2">
+                            <label>Shipment ID</label>
+                        </div>
+                        <div class="col-5">
+                            <input type="text" th:field="*{ShipmentID}" class="form-control">
+                        </div>
+                        <div class="col-5">
+                            <span id="ShipmentIDError"></span>
+                        </div>
+                    </div> <!--card End-->
+
+                    <div class="row"> <!--row Begin-->
+                        <div class="col-2">
+                            <label>Shipment Mode</label>
+                        </div>
+                        <div class="col-5">
+                            <select th:field="*{ShipmentMode}" class="form-control">
+                                <option value=" ">Select</option>
+                                <option value="Air">Air</option>
+                                <option value="Truck">Truck</option>
+                                <option value="Ship">Ship</option>
+                                <option value="Train">Train</option>
+                 </select>
+                        </div>
+                        <div class="col-5">
+                            <span id="ShipmentModeError"></span>
+                        </div>
+                    </div> <!--card End-->
+
+
+                    <div class="row"> <!--row Begin-->
+                        <div class="col-2">
+                            <label>Shipment Code</label>
+                        </div>
+                        <div class="col-5">
+                            <input type="text" th:field="*{ShipmentCode}" class="form-control">
+                        </div>
+                        <div class="col-5">
+                            <span id="ShipmentCodeError"></span>
+                        </div>
+                    </div> <!--card End-->
+
+                    <div class="row"> <!--row Begin-->
+                        <div class="col-2">
+                            <label>Shipment Enable</label>
+                        </div>
+                        <div class="col-5">
+                            <input type="radio" th:field="*{ShipmentEnable}" value="Yes"/>Yes <input type="radio" value="No"/>No
+                        </div>
+                        <div class="col-5">
+                            <span id="ShipmentEnableError"></span>
+                        </div>
+                    </div> <!--card End-->
+                    
+
+                    <div class="row"> <!--row Begin-->
+                        <div class="col-2">
+                            <label> Shipment Grade</label>
+                        </div>
+                        <div class="col-5">
+                            <input type="radio" th:field="*{ShipmentGrade}" value="A"/>A <input type="radio" value="B"/>B <input type="radio" value="C"/>C
+                        </div>
+                        <div class="col-5">
+                            <span id="ShipmentGradeError"></span>
+                        </div>
+                    </div> <!--card End-->
+
+
+                    <div class="row"> <!--row Begin-->
+                        <div class="col-2">
+                            <label>Shipment Description</label>
+                        </div>
+                        <div class="col-5">
+                            <textarea th:field="*{ShipmentDescription}" class="form-control"></textarea>
+                        </div>
+                        <div class="col-5">
+                            <span id="ShipmentDescriptionError"></span>
+                        </div>
+                    </div> <!--card End-->
+                    <input type="submit" value="Create Shipment" class="btn btn-primary">
+                    <a th:href="@{/Shipment/pdf}" class="btn btn-warning">ShipmentPdf</a>
+                    </form>
+            </div>
+            
+        </div> <!--Card End-->
+    </div><!--Container End-->
+    
+<script>
+        $(document).ready(function(){
+          
+            $("#ShipmentModeError").hide();
+            $("#ShipmentCodeError").hide();
+            $("#ShipmentDescriptionError").hide();
+
+            
+            var ShipmentModeError=false;
+            var ShipmentCodeError=false;
+            var ShipmentDescriptionError=false;
+
+           
+               
+            //---------------------------------
+
+            function Validate_MODE()
+            {
+                var val=$("#ShipmentMode").val();
+                if (val==' ')
+                 {
+                    $("#ShipmentModeError").show();
+                    $("#ShipmentModeError").html("<b> chose What Type</b>");
+                    $("#ShipmentModeError").css("color","red");
+                    ShipmentModeError=false;
+  
+                } else {
+                    $("#ShipmentModeError").hide();
+                    ShipmentModeError=true;                   
+                }
+                return ShipmentModeError;
+            }
+            //----------------------------------
+
+            function Validate_Code()
+            {
+                var val=$("#ShipmentCode").val();
+                var exp= /^[A-Z]{4,6}$/;
+                if (val=='')
+                 {
+                    $("#ShipmentCodeError").show();
+                    $("#ShipmentCodeError").html("<b> Fill the code</b>");
+                    $("#ShipmentCodeError").css("color","red"); 
+                    ShipmentCodeError=false;                     
+                }
+                else if (!exp.test(val))
+                 {
+                    $("#ShipmentCodeError").show();
+                    $("#ShipmentCodeError").html("<b>use A-Z-->4to6 chars </b>");
+                    $("#ShipmentCodeError").css("color","red"); 
+                    ShipmentCodeError=false;        
+                }
+                else {
+                    $("#ShipmentCodeError").hide();
+                    ShipmentCodeError=true;
+                }
+                return ShipmentCodeError;
+            }
+            //--------------------------------------------
+
+
+            function Validate_Descri()
+            {
+                var val=$("#ShipmentDescription").val();
+                var exp=/^[a-z-A-Z-0-9\-\s]{5,50}$/;
+
+                if (val=='')
+                 {
+                    $("#ShipmentDescriptionError").show();
+                    $("#ShipmentDescriptionError").html("<b> Fill the description</b>");
+                    $("#ShipmentDescriptionError").css("color","red");
+                    ShipmentDescriptionError=false     
+                    
+                } 
+                else if (!exp.test(val))
+                 {
+                    $("#ShipmentDescriptionError").show();
+                    $("#ShipmentDescriptionError").html("<b> use--> numbers caps lowers</b>");
+                    $("#ShipmentDescriptionError").css("color","red");
+                    ShipmentDescriptionError=false;                
+                    
+                } 
+                
+                else {
+                    $("#ShipmentDescriptionError").hide();
+                    ShipmentDescriptionError=true;
+                    
+                }
+                
+                return ShipmentDescriptionError;
+            }
+
+
+            //--------------------------------------------
+           
+
+            $("#ShipmentMode").change(function(){
+                Validate_MODE();
+            });
+
+
+            $("#ShipmentCode").keyup(function(){
+                Validate_Code();
+            });
+
+
+            $("#ShipmentDescription").keyup(function(){
+
+                Validate_Descri();
+            });
+
+            $("#shipForm").submit(function(){
+               
+                Validate_Code();
+                Validate_Descri();
+                Validate_MODE();
+                if ( ShipmentModeError && ShipmentDescriptionError && ShipmentCodeError) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+    </script>
+    </body>
+</html>
